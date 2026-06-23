@@ -1,0 +1,59 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<main style="max-width: 1200px; margin: 40px auto; padding: 0 20px; padding-bottom: 100px;">
+    
+    <div style="margin-bottom: 20px;">
+        <a href="/" style="color: #007bff; font-weight: 600;">&larr; Retour au Tableau de Bord</a>
+    </div>
+
+   <section style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 30px;">
+    <h3 style="margin-top: 0; color: #1a1a1a;">Importer un document sur le serveur</h3>
+    <form action="/files/create" method="POST" enctype="multipart/form-data" style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
+        <input type="hidden" name="folderId" value="<%= folder.id %>">
+        
+        <div style="flex: 2; min-width: 250px;">
+            <label for="uploaded_file" style="font-weight: 600; color: #333; font-size: 14px;">Sélectionner le document (PDF, Image, Excel...) :</label>
+            <input type="file" id="uploaded_file" name="uploaded_file" required style="margin-top: 8px; display: block;">
+        </div>
+        
+        <button type="submit" class="btn-primary" style="padding: 11px 25px; height: 40px;">Lancer l'importation</button>
+    </form>
+</section>
+
+
+    <section style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 30px;">
+        <h3 style="margin-top: 0; color: #1a1a1a;">Ajouter un document</h3>
+        <form action="/files/create" method="POST" style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
+            <input type="hidden" name="folderId" value="<%= folder.id %>">
+            <div style="flex: 2; min-width: 250px;">
+                <label for="name" style="font-weight: 600; color: #333; font-size: 14px;">Nom du fichier :</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Ex: Fiche_Rendement_Calina_BlocA.pdf" required style="margin-top: 5px;">
+            </div>
+            <button type="submit" class="btn-primary" style="padding: 11px 25px; height: 40px;">Enregistrer le document</button>
+        </form>
+    </section>
+
+    <h3 style="color: #333; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 25px;">📄 Documents indexés</h3>
+    <% if (folder.files.length === 0) { %>
+        <p style="color: #777; font-style: italic;">Aucun document dans ce dossier pour le moment.</p>
+    <% } else { %>
+        <div style="background: white; border-radius: 8px; border: 1px solid #e1e4e8; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+            <% folder.files.forEach(file => { %>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span style="font-size: 24px;">📄</span>
+                        <div>
+                            <h4 style="margin: 0; color: #1a1a1a; font-size: 15px;"><%= file.name %></h4>
+                            <span style="font-size: 12px; color: #888;"><%= (file.size / 1024).toFixed(2) %> KB | Importé le <%= file.createdAt.toLocaleDateString('fr-FR') %></span>
+                        </div>
+                    </div>
+                    <a href="<%= file.url %>" target="_blank" style="padding: 6px 15px; border: 1px solid #1a1a1a; color: #1a1a1a; border-radius: 4px; font-size: 13px; font-weight: 500;">Visualiser</a>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+
+</main>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,53 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<main class="container">
+    
+    <div style="margin-bottom: 2.5rem;">
+        <h1>Bonjour, <%= user.username %> 🦅</h1>
+        <p class="text-muted">Espace de stockage et d'archivage de l'exploitation agricole.</p>
+    </div>
+
+    <section class="card">
+        <h3 class="card-title">Créer un nouveau dossier d'exploitation</h3>
+        <form action="/folders/create" method="POST" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+            <div style="flex: 2; min-width: 250px;" class="form-group">
+                <label for="name" class="form-label">Nom du dossier :</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Ex: Suivi Récolte Papayes Calina IPB9" encoding="UTF-8" required>
+            </div>
+            <div style="flex: 1; min-width: 180px;" class="form-group">
+                <label for="parcel" class="form-label">Parcelle / Secteur :</label>
+                <input type="text" id="parcel" name="parcel" class="form-control" placeholder="Ex: Bloc Nord - 0.5ha">
+            </div>
+            <button type="submit" class="btn btn-primary" style="height: 44px; margin-bottom: 1px;">Créer le dossier</button>
+        </form>
+    </section>
+
+    <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem; color: var(--dark);">Vos Dossiers Racines</h2>
+    
+    <% if (folders.length === 0) { %>
+        <p class="text-muted" style="font-style: italic;">Aucun espace d'archivage créé pour le moment.</p>
+    <% } else { %>
+        <div class="grid">
+            <% folders.forEach(folder => { %>
+                <div class="folder-box">
+                    <div>
+                        <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">📁</span>
+                        <h3 style="font-size: 1.1rem; color: var(--dark); margin-bottom: 0.25rem;"><%= folder.name %></h3>
+                        <% if (folder.parcel) { %>
+                            <span class="badge"><%= folder.parcel %></span>
+                        <% } %>
+                    </div>
+                    <div style="margin-top: 1.5rem;">
+                        <a href="/folders/<%= folder.id %>" class="btn btn-dark" style="width: 100%; font-size: 0.875rem; padding: 0.6rem 1rem;">
+                            Explorer le dossier
+                        </a>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+
+</main>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,16 @@
+<header style="background-color: #1a1a1a; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 24px;">🦅</span>
+        <h1 style="margin: 0; font-size: 20px; letter-spacing: 1px; font-weight: 700;">L'AIGLE ROYAL | Agrobusiness</h1>
+    </div>
+    
+    <nav style="display: flex; align-items: center; gap: 20px;">
+        <% if (locals.currentUser) { %>
+            <span style="color: #bbb;">Producteur : <strong style="color: white;"><%= currentUser.username %></strong></span>
+            <a href="/auth/logout" style="color: #ff4d4d; font-weight: bold;">Déconnexion</a>
+        <% } else { %>
+            <a href="/auth/login" style="color: white;">Connexion</a>
+            <a href="/auth/register" style="color: #4da6ff; font-weight: bold;">Inscription</a>
+        <% } %>
+    </nav>
+</header>

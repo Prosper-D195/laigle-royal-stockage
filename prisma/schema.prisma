@@ -1,0 +1,79 @@
+datasource db {
+  provider = "postgresql" 
+
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 1. Modèle Utilisateur (Ouvriers, Directeurs, Admin)
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  role      String   @default("personnel") // "director", "manager", "personnel"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  folders   Folder[]
+  files     File[]
+}
+
+// 2. Modèle Session (Exigé par @quixo3/prisma-session-store)
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   // Stocke les données de session au format JSON string
+  expiresAt DateTime
+}
+
+// 3. Modèle Dossier (Adapté pour l'Agrobusiness)
+model Folder {
+  id          String   @id @default(uuid())
+  name        String
+  parcel      String?  // Ex: "Togoudo Nord", "Togoudo Sud", ou null si général
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  parentId    String?  // Pour gérer les sous-dossiers (Structure en arbre)
+  parent      Folder?  @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  subFolders  Folder[] @relation("FolderHierarchy")
+
+  files       File[]
+  shareLinks  ShareLink[]
+}
+
+// 4. Modèle Fichier (Stockage Cloud et détails techniques)
+model File {
+  id        String   @id @default(uuid())
+  name      String
+  url       String   // URL Cloudinary ou Supabase Storage
+  size      Int      // Taille en octets
+  mimeType  String   // Ex: "application/pdf", "image/jpeg"
+  createdAt DateTime @default(now())
+
+  // Relations
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  folderId  String
+  folder    Folder  @relation(fields: [folderId], references: [id], onDelete: Cascade)
+}
+
+// 5. Modèle Partage Temporaire (Le Bonus de partage externe)
+model ShareLink {
+  id        String   @id @default(uuid()) // Servira de token dans l'URL publique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  // Relations
+  folderId  String
+  folder    Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
+}

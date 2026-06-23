@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+<body>
+    <main style="max-width: 400px; margin: 50px auto; font-family: sans-serif;">
+        <h2>Connexion - L'AIGLE ROYAL</h2>
+        
+        <% if (error) { %>
+            <div style="color: red; margin-bottom: 15px;"><%= error %></div>
+        <% } %>
+
+        <form action="/auth/login" method="POST">
+            <div style="margin-bottom: 15px;">
+                <label for="email">Adresse E-mail :</label><br>
+                <input type="email" id="email" name="email" required style="width: 100%; padding: 8px; margin-top: 5px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label for="password">Mot de passe :</label><br>
+                <input type="password" id="password" name="password" required style="width: 100%; padding: 8px; margin-top: 5px;">
+            </div>
+
+            <button type="submit" style="width: 100%; padding: 10px; background-color: #1a1a1a; color: white; border: none; cursor: pointer;">
+                Se connecter
+            </button>
+        </form>
+
+        <p style="margin-top: 15px; text-align: center;">
+            Pas encore de compte ? <a href="/auth/register">Créez-en un ici</a>
+        </p>
+    </main>
+</body>
+</html>
